@@ -12,7 +12,7 @@ stock = "AAPL"
 days_to_expiration = 365
 trading_days_to_expiration = round(days_to_expiration * 252/365)
 strike_price = 200
-trials = 10000
+trials = 100000
 
 start = datetime.today() - timedelta(days = 365*7.5)
 end = datetime.today()
@@ -31,7 +31,7 @@ drift = true_yield - cont_div_yield
 df = web.DataReader(stock, start, end)["Adj Close"]
 
 # calculate standard deviation
-std_dev = df.pct_change().std() * np.sqrt(365/252)
+std_dev = df.pct_change().std() * np.sqrt(252/365)
 
 # MONTE CARLO SIMULATION
 # assume normal distribution of returns
