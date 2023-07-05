@@ -9,7 +9,7 @@ yfin.pdr_override()
 discount_rate = 0.0525
 arithmic_div_yield = 0.005
 stock = "AAPL"
-days_to_expiration = 365
+days_to_expiration = 30
 strike_price = 200
 trials = 100000
 
@@ -49,5 +49,5 @@ for i in range(trials):
     if price >= strike_price:
         counter2 += 1
 
-print(f"The probability of being above strike at any time before expiration date is {counter1/trials * 100} %")
-print(f"The probability of being above strike on expiration date {counter2/trials * 100} %")
+print(f"The probability of {stock} being above strike at any time before expiration date is {counter1/trials * 100} %")
+print(f"The probability of {stock} being above strike on expiration date {counter2/trials * 100} %")
