@@ -10,7 +10,6 @@ discount_rate = 0.0525
 arithmic_div_yield = 0.005
 stock = "AAPL"
 days_to_expiration = 365
-trading_days_to_expiration = round(days_to_expiration * 252/365)
 strike_price = 200
 trials = 100000
 
@@ -18,8 +17,8 @@ start = datetime.today() - timedelta(days = 365*7.5)
 end = datetime.today()
 
 # calculate true yield
-cash_price = 1 - discount_rate * 30/360
-true_yield = 365/30*np.log(1+0.004375/cash_price)
+cash_price = 1 - discount_rate * days_to_expiration/360
+true_yield = 365/days_to_expiration*np.log(1+0.004375/cash_price)
 
 # calculate continuous dividend yield
 cont_div_yield = np.log(1 + arithmic_div_yield)
