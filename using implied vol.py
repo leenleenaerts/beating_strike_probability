@@ -35,8 +35,6 @@ chain = options.get_calls(stock, expiration_date)
 mean = stock_info.get_live_price(stock) * np.exp(drift*days_to_expiration/365)
 sd = float((chain[chain["Strike"] == 200.0].iloc[0]["Implied Volatility"])[:-1]) / 100 * np.sqrt(days_to_expiration/365) * mean
 
-
-
 mu = np.log(mean ** 2.0 / (sd ** 2.0 + mean ** 2.0) ** 0.5)
 sigma = (np.log(1.0 + sd ** 2.0 / mean ** 2.0)) ** 0.5
 
@@ -44,5 +42,5 @@ l = stats.lognorm(s=sigma, scale=np.exp(mu))
 
 P = 1 - l.cdf(K)
 
-print(f"The probability of {stock} trading above {K} on {expiration_date} is {P*100}%")
+print(f"The probability of {stock} trading above {K} on {expiration_date} is {P*100:0.1f}%")
 
