@@ -42,7 +42,7 @@ sigma = (np.log(1.0 + sd ** 2.0 / mean ** 2.0)) ** 0.5
 
 l = stats.lognorm(s=sigma, scale=np.exp(mu))
 
-P = 1 - l.cdf(200)
+P = 1 - l.cdf(K)
 
-print(f"The probability of {stock} being worth more than {K} at {expiration_date} is {P*100}%")
+print(f"The probability of {stock} trading above {K} on {expiration_date} is {P*100}%")
 
