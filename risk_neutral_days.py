@@ -9,11 +9,13 @@ yfin.pdr_override()
 discount_rate = 0.0525
 arithmic_div_yield = 0.005
 stock = "AAPL"
-days_to_expiration = 30
+expiration_date = "08/04/2023"
 strike_price = 200
-trials = 100000
+trials = 10000
 
-start = datetime.today() - timedelta(days = 365*7.5)
+today = datetime.today()
+days_to_expiration = (datetime.strptime(expiration_date, "%m/%d/%Y") - today).days
+start = today - timedelta(days = 365*7.5)
 end = datetime.today()
 
 # calculate true yield
@@ -39,7 +41,7 @@ counter2 = 0
 cur_price = df.iloc[-1]
 for i in range(trials):
     price = cur_price
-    daily_return = np.random.normal(drift / days_to_expiration, std_dev, days_to_expiration) + 1
+    daily_return = np.random.normal(drift / 365, std_dev, days_to_expiration) + 1
     strike_met = False
     for r in daily_return:
         price *= r
