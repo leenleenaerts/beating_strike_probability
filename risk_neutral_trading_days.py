@@ -9,12 +9,12 @@ yfin.pdr_override()
 discount_rate = 0.0525
 arithmic_div_yield = 0.005
 stock = "AAPL"
-days_to_expiration = 30
-trading_days_to_expiration = 252
+days_to_expiration = 365
+trading_days_to_expiration = round(days_to_expiration * 252/365)
 strike_price = 200
-trials = 100000
+trials = 10000
 
-start = datetime.today() - timedelta(days=365*7.5)
+start = datetime.today() - timedelta(days = 365*7.5)
 end = datetime.today()
 
 # calculate true yield
@@ -31,18 +31,24 @@ drift = true_yield - cont_div_yield
 df = web.DataReader(stock, start, end)["Adj Close"]
 
 # calculate standard deviation
-std_dev = df.pct_change().std()
+std_dev = df.pct_change().std() * np.sqrt(365/252)
 
 # MONTE CARLO SIMULATION
 # assume normal distribution of returns
-counter = 0
+counter1 = 0
+counter2 = 0
 cur_price = df.iloc[-1]
 for i in range(trials):
     price = cur_price
-    daily_return = np.random.normal(drift / 252, std_dev, trading_days_to_expiration) + 1
+    daily_return = np.random.normal(drift / 365, std_dev, days_to_expiration) + 1
+    strike_met = False
     for r in daily_return:
         price *= r
+        if price >= strike_price and strike_met == False:
+            counter1 += 1
+            strike_met = True
     if price >= strike_price:
-        counter += 1
+        counter2 += 1
 
-print(counter/trials)
+print(f"probability of meeting strike before expiration date is {counter1/trials}")
+print(f"probability of meeting strike on expiration date {counter2/trials}")
