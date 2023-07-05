@@ -31,7 +31,7 @@ drift = true_yield - cont_div_yield
 df = web.DataReader(stock, start, end)["Adj Close"]
 
 # calculate standard deviation
-std_dev = df.pct_change().std() * np.sqrt(365/252)
+std_dev = df.pct_change().std()
 
 # MONTE CARLO SIMULATION
 # assume normal distribution of returns
@@ -40,7 +40,7 @@ counter2 = 0
 cur_price = df.iloc[-1]
 for i in range(trials):
     price = cur_price
-    daily_return = np.random.normal(drift / 365, std_dev, days_to_expiration) + 1
+    daily_return = np.random.normal(drift / trading_days_to_expiration, std_dev, trading_days_to_expiration) + 1
     strike_met = False
     for r in daily_return:
         price *= r
