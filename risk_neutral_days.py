@@ -11,8 +11,9 @@ arithmic_div_yield = 0.005
 stock = "AAPL"
 expiration_date = "08/04/2023"
 strike_price = 200
-trials = 10000
 
+
+trials = 100000
 today = datetime.today()
 days_to_expiration = (datetime.strptime(expiration_date, "%m/%d/%Y") - today).days
 start = today - timedelta(days = 365*7.5)
