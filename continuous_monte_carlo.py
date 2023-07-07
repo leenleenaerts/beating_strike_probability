@@ -1,10 +1,8 @@
 import numpy as np
 import pandas_datareader.data as web
 from datetime import datetime, timedelta
+from yahoo_fin import stock_info
 import yfinance as yfin
-import requests
-
-
 yfin.pdr_override()
 
 # PARAMETERS TO SET
@@ -41,7 +39,7 @@ std_dev = df.pct_change().std() * np.sqrt(252/3650000)
 # assume normal distribution of returns
 counter1 = 0
 counter2 = 0
-cur_price = df.iloc[-1]
+cur_price = stock_info.get_live_price(stock)
 for i in range(trials):
     price = cur_price
     daily_return = np.random.normal(drift / 3650000, std_dev, days_to_expiration*10000) + 1
