@@ -9,13 +9,15 @@ yfin.pdr_override()
 discount_rate = 0.0525
 arithmic_div_yield = 0.005
 stock = "BTC-USD"
-expiration_date = "07/14/2023"
+expiration_date = "07/14/2023 23:59:59"
 K = 32500
 
 
 trials = 5000
-today = datetime.today()
-days_to_expiration = (datetime.strptime(expiration_date, "%m/%d/%Y") - today).days
+now = datetime.now()
+today = datetime.now()
+dif = (datetime.strptime(expiration_date, "%m/%d/%Y %H:%M:%S") - now)
+days_to_expiration = dif.days + dif.seconds / 24 / 3600
 start = today - timedelta(days = 365*5)
 end = datetime.today()
 
@@ -42,7 +44,7 @@ counter2 = 0
 cur_price = stock_info.get_live_price(stock)
 for i in range(trials):
     price = cur_price
-    daily_return = np.random.normal(drift / 3650000, std_dev, days_to_expiration*10000) + 1
+    daily_return = np.random.normal(drift / 3650000, std_dev, round(days_to_expiration*10000)) + 1
     strike_met = False
     for r in daily_return:
         price *= r
