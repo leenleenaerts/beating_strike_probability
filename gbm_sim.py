@@ -12,6 +12,12 @@ sns.set(rc={'figure.figsize': (11.7, 8.27)})
 
 
 def plot_gbm_equity(log_filepath, out_filepath):
+    """
+    Function to plot a lineplot of the GBM generated paths, and save to file
+    :param log_filepath: str of the simulation results filepath in CSV format
+    :param out_filepath: str of the filepath to save the line plot graph
+    :return: None
+    """
 
     data = pd.read_csv(log_filepath)
     fig, axes = plt.subplots()
@@ -37,7 +43,7 @@ if __name__ == '__main__':
     vol = 0.2  # Standard deviation of log returns
 
     # GBM configs
-    n_paths = 10000
+    n_paths = 10000  # Increased number of paths will improve convergence
     dt = 1  # Number of days in each time step for the GBM simulation
     breach_strike = 115
     breach_direction = 'above'
