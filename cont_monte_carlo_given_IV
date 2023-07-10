@@ -1,0 +1,57 @@
+import numpy as np
+import pandas_datareader.data as web
+from datetime import datetime, timedelta
+from yahoo_fin import stock_info
+import yfinance as yfin
+yfin.pdr_override()
+
+# PARAMETERS TO SET
+discount_rate = 0.0525
+stock = "BTC-USD"
+expiration_date = "07/14/2023 23:59:59"
+K = 32500
+IV = 0.45
+
+
+periods_per_day= 5000
+trials = 5000
+now = datetime.now()
+today = datetime.now()
+dif = (datetime.strptime(expiration_date, "%m/%d/%Y %H:%M:%S") - now)
+days_to_expiration = dif.days + dif.seconds / 24 / 3600
+
+
+# calculate true yield
+cash_price = 1 - discount_rate * days_to_expiration/360
+true_yield = 365/days_to_expiration*np.log(1+0.004375/cash_price)
+
+# calculate continuous dividend yield
+cont_div_yield = np.log(1)
+
+# calculate risk neutral drift
+drift = true_yield - cont_div_yield
+
+# calculate standard deviation
+std_dev = IV * np.sqrt(1 / 365 / periods_per_day)
+
+# MONTE CARLO SIMULATION
+# assume normal distribution of returns
+counter1 = 0
+counter2 = 0
+cur_price = stock_info.get_live_price(stock)
+for i in range(trials):
+    price = cur_price
+    step_return = np.random.normal(drift / 365 / periods_per_day, std_dev, round(days_to_expiration * periods_per_day)) + 1
+    strike_met = False
+    for r in step_return:
+        price *= r
+        if price >= K and strike_met == False:
+            counter1 += 1
+            strike_met = True
+    if price >= K:
+        counter2 += 1
+
+print("\n")
+print(f"current price of {stock} = ${cur_price:.2f}.")
+print(f"The probability of {stock} being above ${K} at any time before expiration date is {counter1/trials * 100:.2f} %")
+print(f"The probability of {stock} being above ${K} on expiration date {counter2/trials * 100:.2f} %")
