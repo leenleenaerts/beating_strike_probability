@@ -7,14 +7,14 @@ yfin.pdr_override()
 
 # PARAMETERS TO SET
 discount_rate = 0.0525
-stock = "BTC-USD"
-expiration_date = "07/14/2023 23:59:59"
-K = 32500
+stock = "ETH-USD"
+expiration_date = "12/31/2023 22:00:00"
+K = 2000
 IV = 0.45
 
 
-periods_per_day= 5000
-trials = 5000
+periods_per_day = 5000
+trials = 5555
 now = datetime.now()
 today = datetime.now()
 dif = (datetime.strptime(expiration_date, "%m/%d/%Y %H:%M:%S") - now)
@@ -30,7 +30,7 @@ cont_div_yield = np.log(1)
 
 # calculate risk neutral drift
 drift = true_yield - cont_div_yield
-
+print(drift)
 # calculate standard deviation
 std_dev = IV * np.sqrt(1 / 365 / periods_per_day)
 
@@ -41,7 +41,7 @@ counter2 = 0
 cur_price = stock_info.get_live_price(stock)
 for i in range(trials):
     price = cur_price
-    step_return = np.random.normal(drift / 365 / periods_per_day, std_dev, round(days_to_expiration * periods_per_day)) + 1
+    step_return = np.exp(np.random.normal(0, std_dev, round(periods_per_day * days_to_expiration))) - .5 * std_dev * std_dev + drift / 365 / periods_per_day
     strike_met = False
     for r in step_return:
         price *= r
@@ -52,6 +52,6 @@ for i in range(trials):
         counter2 += 1
 
 print("\n")
-print(f"current price of {stock} = ${cur_price:.2f}.")
-print(f"The probability of {stock} being above ${K} at any time before expiration date is {counter1/trials * 100:.2f} %")
-print(f"The probability of {stock} being above ${K} on expiration date {counter2/trials * 100:.2f} %")
+print(f"The current price of {stock} = ${cur_price:.2f}.")
+print(f"The probability of {stock} being above ${K} at any time before expiration date is {counter1/trials * 100:.2f} %.")
+print(f"The probability of {stock} being above ${K} on expiration date is {counter2/trials * 100:.2f} %.")
